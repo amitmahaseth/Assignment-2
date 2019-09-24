@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/pading"
+    android:orientation="vertical">
+
+
+
+
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back" />
+
+    <TextView
+        android:id="@+id/edtOtp"
+        android:layout_below="@id/back"
+        android:textStyle="bold"
+        android:padding="@dimen/pading"
+        android:textSize="@dimen/margi_min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OTP Verification" />
+
+    <TextView
+        android:id="@+id/edtView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtOtp"
+        android:textSize="@dimen/pading"
+        android:layout_marginTop="@dimen/margin_top"
+        android:padding="@dimen/pading"
+        android:text="Enter the verification code \n sent to your number via sms."
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtView"
+        android:gravity="center_horizontal"
+        android:ems="4"
+        android:maxLength="1"
+        android:inputType="numberPassword" />
+
+    <EditText
+        android:id="@+id/edt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/edt1"
+        android:maxLength="1"
+        android:gravity="center_horizontal"
+        android:layout_alignBaseline="@id/edt1"
+        android:ems="4"
+        android:inputType="numberPassword" />
+
+    <EditText
+        android:id="@+id/edt3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/edt2"
+        android:gravity="center_horizontal"
+        android:layout_alignBaseline="@id/edt1"
+        android:ems="4"
+        android:maxLength="1"
+        android:inputType="numberPassword" />
+
+    <EditText
+        android:id="@+id/edt4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/edt3"
+        android:layout_alignBaseline="@id/edt1"
+        android:gravity="center_horizontal"
+        android:ems="4"
+        android:maxLength="1"
+        android:inputType="numberPassword" />
+
+    <Button
+        android:id="@+id/resend"
+        android:layout_width="@dimen/width"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt1"
+        android:layout_marginHorizontal="@dimen/pading"
+        android:layout_marginTop="@dimen/margintop"
+        android:background="@drawable/buttonborder"
+        android:padding="@dimen/pading"
+        android:text="Resend"
+        android:textColor="@color/colorBlack" />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="@dimen/width"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorBlack"
+        android:layout_toRightOf="@id/resend"
+        android:layout_alignBaseline="@id/resend"
+        android:padding="@dimen/pading"
+        android:text="Submit" />
+
+
+</RelativeLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margi_max">150dp</dimen>
+    <dimen name="margi_min">30dp</dimen>
+    <dimen name="border">8dp</dimen>
+    <dimen name="pading">20dp</dimen>
+    <dimen name="margin_top">-31dp</dimen>
+    <dimen name="width">160dp</dimen>
+    <dimen name="button_border">3dp</dimen>
+    <dimen name="margintop">43dp</dimen>
+    <dimen name="heightimage">104dp</dimen>
+    <dimen name="marginverticalimage">200dp</dimen>
+</resources>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".RegistrationActivity">
+
+            <ImageButton
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back" />
+
+            <TextView
+                android:id="@+id/edtwelcm"
+                android:layout_below="@id/back"
+                android:textStyle="bold"
+                android:padding="@dimen/pading"
+                android:textSize="@dimen/margi_min"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Welcome," />
+
+            <TextView
+                android:id="@+id/edtView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtwelcm"
+                android:textSize="@dimen/pading"
+                android:layout_marginTop="@dimen/margin_top"
+                android:padding="@dimen/pading"
+                android:text="Please provide your basic information"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/userimage"
+                android:layout_width="@dimen/heightimage"
+                android:layout_height="@dimen/heightimage"
+                android:layout_below="@id/edtView"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_account_circle_black_24dp" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layoutName"
+                android:layout_below="@id/userimage">
+                <EditText
+                    android:id="@+id/edtname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Full Name" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layoutEmail"
+                android:layout_below="@id/layoutName">
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtname"
+                android:inputType="textEmailAddress"
+                android:hint="Email Address" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:id="@+id/layoutPassword"
+                android:layout_below="@id/layoutEmail"
+                app:passwordToggleEnabled="true"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edtpassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Password"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:id="@+id/layoutGender"
+                android:layout_below="@id/layoutPassword"
+                android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edtgender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layoutPassword"
+                app:passwordToggleEnabled="true"
+                android:inputType="textPersonName"
+                android:hint="Gender" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:id="@+id/layoutdob"
+                android:layout_below="@id/layoutGender"
+                android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edtdob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Date of Birth"
+                android:inputType="date" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:id="@+id/layoutOccupation"
+                android:layout_below="@id/layoutdob"
+                android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/edtOccupation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Occupation"
+                android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textViewSignup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layoutOccupation"
+                android:layout_marginTop="40dp"
+                android:padding="@dimen/pading"
+                android:text="Sign up with different account? " />
+
+            <Button
+                android:id="@+id/btnContinue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewSignup"
+                android:textColor="@color/colorBlack"
+                android:background="@drawable/buttonborder"
+                android:text="Continue" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
