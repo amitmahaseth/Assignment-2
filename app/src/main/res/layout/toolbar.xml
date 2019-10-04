@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@color/colorGreen"
+    android:id="@+id/toolbar"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/tv_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home"
+            android:textColor="@color/colorWhite"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/text_size" />
+
+        <ImageButton
+            android:id="@+id/iv_squares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/squares"
+            android:layout_toRightOf="@id/tv_home"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/squares_margin_left"
+
+            />
+        <ImageButton
+            android:id="@+id/iv_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sort"
+            android:layout_toRightOf="@id/tv_home"
+            android:layout_marginLeft="@dimen/sort_margin_left"
+            android:layout_centerInParent="true"
+            />
+
+
+
+    </RelativeLayout>
+
+</androidx.appcompat.widget.Toolbar>
