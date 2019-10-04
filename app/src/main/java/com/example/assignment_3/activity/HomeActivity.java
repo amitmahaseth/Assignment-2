@@ -1,18 +1,22 @@
 package com.example.assignment_3.activity;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +36,7 @@ public class HomeActivity extends AppCompatActivity implements StudentAdapter.It
     RecyclerView recyclerView;
     StudentAdapter myAdapter;
     RecyclerView.LayoutManager layoutManager;
-
+    int isList=2;
 
 
 
@@ -63,6 +67,26 @@ public class HomeActivity extends AppCompatActivity implements StudentAdapter.It
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(myAdapter);
+        ivSquares.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onClick(View view) {
+                if(isList==2){
+                    ivSquares.setBackground(getResources().getDrawable(R.drawable.list));
+                    layoutManager=new LinearLayoutManager(HomeActivity.this);
+                    recyclerView.setLayoutManager(layoutManager);
+                    myAdapter.notifyDataSetChanged();
+                    isList=1;
+                }
+                else{
+                    ivSquares.setBackground(getResources().getDrawable(R.drawable.squares));
+                    layoutManager=new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
+                    recyclerView.setLayoutManager(layoutManager);
+                    myAdapter.notifyDataSetChanged();
+                    isList=2;
+                }
+            }
+        });
         addStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,6 +95,8 @@ public class HomeActivity extends AppCompatActivity implements StudentAdapter.It
 
             }
         });
+
+//        pop up og list view as name or roll no to arrange through then
 
         ivsort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +162,7 @@ public class HomeActivity extends AppCompatActivity implements StudentAdapter.It
         }
     }
 
+//custom dialog button on view,update,delete
 @Override
     public void onItemClicked(final int position){
         final Dialog dialog = new Dialog(this);

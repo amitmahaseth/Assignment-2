@@ -9,7 +9,13 @@
     <string name="view">View</string>
     <string name="name">Name</string>
     <string name="view_student">View Student</string>
+    <string name="update_student">Update Student</string>
     <string name="go_back_btn">Back</string>
-
+    <string name="label_enter_name">Enter Name</string>
+    <string name="label_invalid_name">Invalid Name</string>
+    <string name="enter_class">Enter Class</string>
+    <string name="enter_roll">Enter Roll No</string>
+    <string name="label_invalid_class">Invalid Class</string>
+    <string name="label_invalid_roll">Invalid Roll</string>
 
 </resources>
