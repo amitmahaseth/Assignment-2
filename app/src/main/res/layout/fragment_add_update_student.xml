@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_border"
+    tools:context=".activity.fragment.AddUpdateStudentFragment"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+
+    <EditText
+        android:id="@+id/et_student_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_border"
+        android:hint="@string/student_name"
+        android:background="@drawable/et_selector"
+        />
+
+    <EditText
+        android:id="@+id/et_class"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_student_name"
+        android:padding="@dimen/padding_border"
+        android:inputType="number"
+        android:maxLength="2"
+        android:layout_marginTop="@dimen/padding_border"
+        android:hint="@string/class_name"
+        android:background="@drawable/et_selector"
+        />
+
+        <EditText
+            android:id="@+id/et_roll_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_class"
+            android:layout_marginTop="@dimen/padding_border"
+            android:padding="@dimen/padding_border"
+            android:hint="@string/roll_no"
+            android:inputType="number"
+            android:background="@drawable/et_selector"
+            />
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_border"
+            android:padding="@dimen/padding"
+            android:layout_below="@+id/et_roll_no"
+            android:textColor="@color/colorGreen"
+            android:textStyle="bold|normal"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_marginRight="@dimen/margin_right"
+            android:background="@drawable/add_student_border"
+            android:text="@string/add"
+            />
+
+
+</LinearLayout>
