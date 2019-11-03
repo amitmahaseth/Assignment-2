@@ -289,20 +289,20 @@ public class AddUpdateStudentFragment extends Fragment implements AsyncTaskStude
         }
     };
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        if (isAddUpdateFrag) {
-//            intentServiceReceiver();
-//        }
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (isAddUpdateFrag) {
+            intentServiceReceiver();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
 
 
     private void intentServiceReceiver() {
@@ -317,18 +317,14 @@ public class AddUpdateStudentFragment extends Fragment implements AsyncTaskStude
     //broadcast receiver for intent service
 
 
-
-
-
-
     public class IntentServiceBroadcastReceiver extends BroadcastReceiver {
 
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context mContext, Intent intent) {
             StudentDetail studentDetail = intent.getParcelableExtra(INTENT_ADD_BROADCAST_STUDENT_OBJ);
 
-            ((HomeActivity)context).onDataUpdated(updatClickedPosition,studentDetail);
-
+            ((HomeActivity) context).onDataUpdated(updatClickedPosition, studentDetail);
+            ((HomeActivity) context).switchPager();
             clearEt();
             uiUpdateClicked();
 
