@@ -51,16 +51,13 @@ public class ViewActivity extends AppCompatActivity {
         ibGrid.setVisibility(View.INVISIBLE);
         ibSort.setVisibility(View.INVISIBLE);
         tvLabelHome.setText(getResources().getString(R.string.btn_name_view));
-
         etViewName.setBackground(getResources().getDrawable(R.drawable.view_data));
         etViewClass.setBackground(getResources().getDrawable(R.drawable.view_data));
         etViewRoll.setBackground(getResources().getDrawable(R.drawable.view_data));
-
         etViewName.setInputType(InputType.TYPE_NULL);
         etViewClass.setInputType(InputType.TYPE_NULL);
         etViewRoll.setInputType(InputType.TYPE_NULL);
         btnViewBack.setText(R.string.label_back);
-
         etViewName.setText(studentDetails.getStudentName());
         etViewRoll.setText(String.valueOf(studentDetails.getRollNo()));
         etViewClass.setText(String.valueOf(studentDetails.getClassName()));

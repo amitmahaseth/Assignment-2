@@ -1,7 +1,12 @@
 package com.example.assignment3update.activity.fragment;
 
 
+import android.app.Dialog;
+import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -9,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -24,25 +30,37 @@ import com.example.assignment3update.R;
 import com.example.assignment3update.activity.activity.HomeActivity;
 import com.example.assignment3update.activity.activity.MainActivity;
 import com.example.assignment3update.activity.model.StudentDetail;
+import com.example.assignment3update.activity.services.AsyncTaskStudentList;
+import com.example.assignment3update.activity.services.IntentServiceStudent;
+import com.example.assignment3update.activity.services.MyService;
 
-import java.util.ArrayList;
+import static com.example.assignment3update.activity.services.IntentServiceStudent.INTENT_ADD_BROADCAST;
+import static com.example.assignment3update.activity.services.IntentServiceStudent.INTENT_ADD_BROADCAST_STUDENT_OBJ;
+import static com.example.assignment3update.activity.services.MyService.ADD_BROADCAST;
+import static com.example.assignment3update.activity.services.MyService.ADD_BROADCAST_STUDENT_OBJ;
 
+public class AddUpdateStudentFragment extends Fragment implements AsyncTaskStudentList.AsyncTaskback {
 
-public class AddUpdateStudentFragment extends Fragment {
-
-   private TextView tvTitle;
-   private EditText etStudentName, etClass, etRollNo;
-   private Button btnAdd;
-   private ImageButton ivsort, ivSquares;
+    private TextView tvTitle;
+    private EditText etStudentName, etClass, etRollNo;
+    private Button btnAdd;
+    private ImageButton ivsort, ivSquares;
     private Context context;
-    private int code;
-    private   ArrayList<StudentDetail> student = new ArrayList<StudentDetail>();
+    private int code, updatClickedPosition;
+    private boolean isAddClicked = true;
+    private StudentDetail studentDetail;
+    private boolean isAddUpdateFrag = false;
+    public static final String STUDENT_OBJ = "student object";
 
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
+    }
+
+    public AddUpdateStudentFragment(boolean isAddUpdateFrag) {
+        this.isAddUpdateFrag = isAddUpdateFrag;
     }
 
     public AddUpdateStudentFragment() {
@@ -54,7 +72,7 @@ public class AddUpdateStudentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View v = inflater.inflate(R.layout.fragment_add_update_student, container, false);
+        View v = inflater.inflate(R.layout.fragment_add_update_student, container, false);
 
         tvTitle = v.findViewById(R.id.tv_home);
         ivsort = v.findViewById(R.id.iv_sort);
@@ -63,12 +81,11 @@ public class AddUpdateStudentFragment extends Fragment {
         etClass = v.findViewById(R.id.et_class);
         etRollNo = v.findViewById(R.id.et_roll_no);
         btnAdd = v.findViewById(R.id.btn_submit);
-//        ivSquares.setVisibility(View.INVISIBLE);
-//        ivsort.setVisibility(View.INVISIBLE);
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               addDetails();
+                onAddUpdateClicked();
             }
 
 
@@ -76,56 +93,143 @@ public class AddUpdateStudentFragment extends Fragment {
         return v;
     }
 
+    //opens dialog
+    private void onAddUpdateClicked() {
+        if (isValidate()) {
+            final Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.dialog);
+
+            Button btnAsyncTask = dialog.findViewById(R.id.btn_view);
+            Button btnService = dialog.findViewById(R.id.btn_edit);
+            Button btnIntentService = dialog.findViewById(R.id.btn_delete);
+
+            btnAsyncTask.setText(R.string.asynctask);
+            btnService.setText(R.string.service);
+            btnIntentService.setText(R.string.intent_service);
+
+            btnAsyncTask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isAddClicked) {
+                        addStudentDetailServices(1);
+                        dialog.dismiss();
+                    } else {
+                        isAddClicked = true;
+                        updateStudentDetailServices(1);
+                        dialog.dismiss();
+                    }
+                }
+            });
+
+            btnService.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isAddClicked) {
+                        addStudentDetailServices(2);
+                        dialog.dismiss();
+                    } else {
+                        isAddClicked = true;
+                        updateStudentDetailServices(2);
+                        dialog.dismiss();
+                    }
+                }
+            });
+
+            btnIntentService.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isAddClicked) {
+                        addStudentDetailServices(3);
+                        dialog.dismiss();
+                    } else {
+                        isAddClicked = true;
+                        updateStudentDetailServices(3);
+                        dialog.dismiss();
+                    }
+                }
+            });
+            dialog.show();
+        }
+    }
+
+    //add data through services
+    private void addStudentDetailServices(int service) {
+        String etAddName = etStudentName.getText().toString().trim();
+        String etAddClass = etClass.getText().toString().trim();
+        String etAddRollNo = etRollNo.getText().toString().trim();
+        StudentDetail studentDetail = new StudentDetail(etAddName, Integer.parseInt(etAddClass), Integer.parseInt(etAddRollNo), 1);
+
+        if (service == 1) {
+            new AsyncTaskStudentList(context, this).execute(studentDetail);
+            Toast.makeText(context, "add async", Toast.LENGTH_SHORT).show();
+        } else if (service == 2) {
+            Intent intent = new Intent(context, MyService.class);
+            intent.putExtra(STUDENT_OBJ, studentDetail);
+            context.startService(intent);
+            Toast.makeText(context, "add service", Toast.LENGTH_SHORT).show();
+
+        } else if (service == 3) {
+            Intent intent = new Intent(context, IntentServiceStudent.class);
+            intent.putExtra(STUDENT_OBJ, studentDetail);
+            ((HomeActivity) context).startService(intent);
+
+        }
+    }
+
+    //update data
+    private void updateStudentDetailServices(int service) {
+        String etUpdatedName = etStudentName.getText().toString().trim();
+        final int etUpdatedClass = Integer.parseInt(etClass.getText().toString().trim());
+        int etUpdatedRoll = studentDetail.getRollNo();
+        final StudentDetail updatedStudentObj = new StudentDetail(etUpdatedName, etUpdatedClass, etUpdatedRoll, 2);
+
+        if (service == 1) {
+            new AsyncTaskStudentList(context, this).execute(updatedStudentObj);
+            Toast.makeText(context, "update async", Toast.LENGTH_SHORT).show();
+
+        } else if (service == 2) {
+            Intent intent = new Intent(context, MyService.class);
+            intent.putExtra(STUDENT_OBJ, updatedStudentObj);
+            context.startService(intent);
+            Toast.makeText(context, "update service", Toast.LENGTH_SHORT).show();
+        } else if (service == 3) {
+            Intent intent = new Intent(context, IntentServiceStudent.class);
+            intent.putExtra(STUDENT_OBJ, updatedStudentObj);
+            context.startService(intent);
+
+            Toast.makeText(context, "update intent service", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
     //update data
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void updateStudentDetail(final int clickedPosiition, final StudentDetail studentObj, Boolean updateIsClicked) {
 
-        if (updateIsClicked){
+        this.updatClickedPosition = clickedPosiition;
+        this.studentDetail = studentObj;
+        isAddClicked = false;
+        etRollNo.setInputType(InputType.TYPE_NULL);
+        etRollNo.setBackground(getResources().getDrawable(R.drawable.view_data));
+        btnAdd.setText(getResources().getString(R.string.label_update));
 
-            etRollNo.setInputType(InputType.TYPE_NULL);
-            etRollNo.setBackground(getResources().getDrawable(R.drawable.view_data));
-            btnAdd.setText(getResources().getString(R.string.label_update));
-
-            etStudentName.setText(studentObj.getStudentName());
-            etRollNo.setText(String.valueOf(studentObj.getRollNo()));
-            etClass.setText(String.valueOf(studentObj.getClassName()));
-
-            code=2;
-
-            btnAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String etUpdatedName=etStudentName.getText().toString().trim();
-                    final int etUpdatedClass=Integer.parseInt(etClass.getText().toString().trim());
-                    int etUpdatedRoll=studentObj.getRollNo();
-
-
-                    final StudentDetail updatedStudentObj=new StudentDetail(etUpdatedName,etUpdatedClass,etUpdatedRoll);
-
-                    ((HomeActivity)context).onDataUpdated(clickedPosiition,updatedStudentObj);
-
-                    ((HomeActivity)context).switchPager();
-
-                }
-            });
-
-        }
+        etStudentName.setText(studentObj.getStudentName());
+        etRollNo.setText(String.valueOf(studentObj.getRollNo()));
+        etClass.setText(String.valueOf(studentObj.getClassName()));
 
     }
 
-    // Add data
-    private void addDetails() {
-        String etAddName = etStudentName.getText().toString().trim();
-        String etAddClass = etClass.getText().toString().trim();
-        String etAddRollNo = etRollNo.getText().toString().trim();
-        if (isValidate()) {
-            StudentDetail studentDetail = new StudentDetail(etAddName, Integer.parseInt(etAddClass), Integer.parseInt(etAddRollNo));
-            ((HomeActivity) context).addStudentData(studentDetail);
-            ((HomeActivity) context).switchPager();
-            etStudentName.setText("");
-            etRollNo.setText("");
-            etClass.setText("");
-        }
+
+    //clear all et's
+    private void clearEt() {
+        etStudentName.setText("");
+        etRollNo.setText("");
+        etClass.setText("");
+    }
+
+    private void uiUpdateClicked() {
+        etRollNo.setInputType(InputType.TYPE_CLASS_NUMBER);
+        btnAdd.setText("Add");
 
     }
 
@@ -159,5 +263,95 @@ public class AddUpdateStudentFragment extends Fragment {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void asyncClickListner(Boolean aBoolean, StudentDetail studentDetail) {
+
+        if (aBoolean) {
+            ((HomeActivity) context).onDataUpdated(updatClickedPosition, studentDetail);
+            ((HomeActivity) context).switchPager();
+            clearEt();
+            uiUpdateClicked();
+        }
+
+    }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            StudentDetail studentDetail = intent.getParcelableExtra(ADD_BROADCAST_STUDENT_OBJ);
+            ((HomeActivity) context).onDataUpdated(updatClickedPosition, studentDetail);
+            ((HomeActivity) context).switchPager();
+            clearEt();
+            uiUpdateClicked();
+
+        }
+    };
+
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//        if (isAddUpdateFrag) {
+//            intentServiceReceiver();
+//        }
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//
+//    }
+
+
+    private void intentServiceReceiver() {
+        IntentServiceBroadcastReceiver intentServiceBroadcastReceiver = new IntentServiceBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(INTENT_ADD_BROADCAST);
+
+        LocalBroadcastManager.getInstance(context).registerReceiver(intentServiceBroadcastReceiver, intentFilter);
+
+    }
+
+    //broadcast receiver for intent service
+
+
+
+
+
+
+    public class IntentServiceBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            StudentDetail studentDetail = intent.getParcelableExtra(INTENT_ADD_BROADCAST_STUDENT_OBJ);
+
+            ((HomeActivity)context).onDataUpdated(updatClickedPosition,studentDetail);
+
+            clearEt();
+            uiUpdateClicked();
+
+        }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (isAddUpdateFrag) {
+            ((HomeActivity) context).registerReceiver(broadcastReceiver, new IntentFilter(ADD_BROADCAST));
+        }
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (isAddUpdateFrag) {
+            context.unregisterReceiver(broadcastReceiver);
+        }
+
     }
 }

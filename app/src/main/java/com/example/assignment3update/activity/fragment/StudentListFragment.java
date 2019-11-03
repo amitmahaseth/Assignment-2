@@ -4,6 +4,7 @@ package com.example.assignment3update.activity.fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -25,13 +26,15 @@ import com.example.assignment3update.R;
 import com.example.assignment3update.activity.activity.HomeActivity;
 import com.example.assignment3update.activity.activity.ViewActivity;
 import com.example.assignment3update.activity.adapter.StudentAdapter;
+import com.example.assignment3update.activity.database.DataBaseHelper;
 import com.example.assignment3update.activity.model.StudentDetail;
+import com.example.assignment3update.activity.services.AsyncTaskStudentList;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class StudentListFragment extends Fragment implements StudentAdapter.ItemClicked{
+public class StudentListFragment extends Fragment implements StudentAdapter.ItemClicked,AsyncTaskStudentList.AsyncTaskback {
 
 
     private Button btnAddStudent;
@@ -39,11 +42,12 @@ public class StudentListFragment extends Fragment implements StudentAdapter.Item
     private StudentAdapter myAdapter;
     private Context context;
     private TextView tvNoRecord;
-    private Boolean updateClicked=true;
+    private Boolean updateClicked = true;
 
-    private ArrayList<StudentDetail>studentlistCopy=new ArrayList<>();
+    private ArrayList<StudentDetail> studentlistCopy = new ArrayList<>();
 
-    public static final String INTENT_KEY="key";
+    public static final String INTENT_KEY = "view";
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -59,13 +63,23 @@ public class StudentListFragment extends Fragment implements StudentAdapter.Item
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View v= inflater.inflate(R.layout.fragment_student_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_student_list, container, false);
         tvNoRecord = v.findViewById(R.id.tv_display_student);
-        btnAddStudent=v.findViewById(R.id.btn_add_student);
-        recyclerView =(RecyclerView) v.findViewById(R.id.list);
+        btnAddStudent = v.findViewById(R.id.btn_add_student);
+        recyclerView = (RecyclerView) v.findViewById(R.id.list);
 
         myAdapter = new StudentAdapter(this);
 
+        Cursor cursor = new DataBaseHelper(context).getAllData();
+        while (cursor.moveToNext()) {
+            String name = cursor.getString(0);
+            int studentClass = cursor.getInt(1);
+            int roll = cursor.getInt(2);
+            StudentDetail st = new StudentDetail(name, studentClass, roll, 0);
+            studentlistCopy.add(st);
+            myAdapter.setAdapterData(studentlistCopy);
+            labelVisibility();
+        }
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -76,19 +90,21 @@ public class StudentListFragment extends Fragment implements StudentAdapter.Item
         btnAddStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((HomeActivity)getActivity()).switchPager();
+                ((HomeActivity) getActivity()).switchPager();
             }
 
         });
         return v;
     }
+
     //getting object from activity
-    public  void setData(StudentDetail studentlist) {
+    public void setData(StudentDetail studentlist) {
         studentlistCopy.add(studentlist);
         myAdapter.setAdapterData(studentlistCopy);
         labelVisibility();
 
     }
+
     private void labelVisibility() {
         if (studentlistCopy.size() == 0) {
             recyclerView.setVisibility(View.INVISIBLE);
@@ -130,8 +146,12 @@ public class StudentListFragment extends Fragment implements StudentAdapter.Item
     }
 
     //updated data
-    public void updateStudentDetail(final int clickedPosition,StudentDetail studentObject){
-        studentlistCopy.set(clickedPosition,studentObject);
+    public void updateStudentDetail(final int clickedPosition, StudentDetail studentObject) {
+        if (studentObject.getType() == 1) {
+            studentlistCopy.add(studentObject);
+        } else if (studentObject.getType() == 2) {
+            studentlistCopy.set(clickedPosition, studentObject);
+        }
         myAdapter.setAdapterData(studentlistCopy);
     }
 
@@ -151,48 +171,51 @@ public class StudentListFragment extends Fragment implements StudentAdapter.Item
     }
 
     //dialog box
-@Override
-public void onItemClicked(final int position) {
-    final Dialog dialog = new Dialog(context);
-    dialog.setContentView(R.layout.dialog);
+    @Override
+    public void onItemClicked(final int position) {
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.dialog);
 
-    Button btnView = dialog.findViewById(R.id.btn_view);
-    Button btnUpdate = dialog.findViewById(R.id.btn_edit);
-    Button btnDelete = dialog.findViewById(R.id.btn_delete);
+        Button btnView = dialog.findViewById(R.id.btn_view);
+        Button btnUpdate = dialog.findViewById(R.id.btn_edit);
+        Button btnDelete = dialog.findViewById(R.id.btn_delete);
 
-    btnDelete.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            studentlistCopy.remove(position);
-            myAdapter.setAdapterData(studentlistCopy);
-            dialog.dismiss();
-        }
-    });
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StudentDetail studentDetail=studentlistCopy.get(position);
+                studentDetail.setType(3);
+                new AsyncTaskStudentList(context,StudentListFragment.this).execute(studentDetail);
+                studentlistCopy.remove(position);
+                myAdapter.setAdapterData(studentlistCopy);
+                dialog.dismiss();
+            }
+        });
 
-    btnUpdate.setOnClickListener(new View.OnClickListener() {
-        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-        @Override
-        public void onClick(View view) {
-            ((HomeActivity)context).dialogClick(position,studentlistCopy.get(position),updateClicked);
-            dialog.dismiss();
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onClick(View view) {
+                ((HomeActivity) context).dialogClick(position, studentlistCopy.get(position), updateClicked);
+                dialog.dismiss();
 
-        }
-    });
-    btnView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent intent=new Intent(context, ViewActivity.class);
-           intent.putExtra(INTENT_KEY,studentlistCopy.get(position));
-           startActivity(intent);
-           dialog.dismiss();
-        }
-    });
-    dialog.show();
+            }
+        });
+        btnView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ViewActivity.class);
+                intent.putExtra(INTENT_KEY, studentlistCopy.get(position));
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+
+    @Override
+    public void asyncClickListner(Boolean aBoolean, StudentDetail studentDetail) {
+
+    }
 }
-
-
-
-}
-
-
-

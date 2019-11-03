@@ -102,7 +102,7 @@ public class HomeActivity extends AppCompatActivity{
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         studentListFragment = new StudentListFragment();
-        addUpdateStudentFragment = new AddUpdateStudentFragment();
+        addUpdateStudentFragment = new AddUpdateStudentFragment(true);
 
         adapter.sam(studentListFragment,getString(R.string.student_list));
         adapter.sam(addUpdateStudentFragment, getString(R.string.add_update_student));
@@ -121,9 +121,9 @@ public class HomeActivity extends AppCompatActivity{
 
     //getting data from fragment send to student list
     public void addStudentData(StudentDetail studentDetail) {
-          if(studentListFragment instanceof StudentListFragment){
-              studentListFragment.setData(studentDetail);
-          }
+        if(studentListFragment instanceof StudentListFragment){
+            studentListFragment.setData(studentDetail);
+        }
 
 
     }

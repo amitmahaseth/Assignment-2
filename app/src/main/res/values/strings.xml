@@ -26,4 +26,7 @@
     <string name="label_back">Back</string>
     <string name="btn_name_view">View</string>
     <string name="label_update">Update</string>
+    <string name="asynctask">Asynctask</string>
+    <string name="service">Service</string>
+    <string name="intent_service">Intent Service</string>
 </resources>
